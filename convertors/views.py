@@ -10,10 +10,17 @@ def index(request):
 
 
 def upload_file(request):
-    if request.method == 'POST':
+    # import ipdb; ipdb.set_trace()
+    if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
-        
-        return HttpResponseRedirect('upload_file')
+        upload_file = request.FILES['file']
+        file = io.StringIO(upload_file.read().decode())
+        # print(file.read())
+        reader = csv.DictReader(file)
+        json_data = json.dumps(list(reader))
+        print(json_data)
+
+        return render(request, 'json.html', {'json_data': json_data})
     else:
         form = UploadFileForm()
         return render(request, 'upload.html', {'form': form})
